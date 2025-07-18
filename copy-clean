@@ -1,9 +1,47 @@
 #!/usr/bin/env bash
 
+show_help() {
+  cat << EOF
+copy-clean - Creates a clean copy of a project folder without development artifacts
+
+USAGE:
+  $0 <source-folder> <destination-folder>
+  $0 --help | -h
+
+ARGUMENTS:
+  source-folder       Source project folder to copy
+  destination-folder  Destination folder for the clean copy
+
+OPTIONS:
+  --help, -h          Show this help message
+
+EXAMPLE:
+  $0 my-project clean-project
+
+DESCRIPTION:
+  This script creates a clean copy of a project by:
+  1. Copying the source folder to destination
+  2. Removing development folders: node_modules, .git, .github, dist
+  3. Removing checksum and archive files: *.md5, *.sha1, *.zip
+
+USE CASES:
+  - Creating clean project copies for sharing
+  - Preparing projects for archiving
+  - Removing development artifacts before deployment
+EOF
+}
+
+# === Check for help flag ===
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+  show_help
+  exit 0
+fi
+
 # === Require 2 args ===
 if [ "$#" -ne 2 ]; then
   echo "Usage: $0 <source-folder> <destination-folder>"
   echo "Example: $0 my-project clean-project"
+  echo "Use --help for more information"
   exit 1
 fi
 

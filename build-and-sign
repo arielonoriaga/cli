@@ -1,9 +1,49 @@
 #!/usr/bin/env bash
 
+show_help() {
+  cat << EOF
+build-and-sign - Creates a clean, signed build package with integrity verification
+
+USAGE:
+  $0 <source-folder> <output-prefix>
+  $0 --help | -h
+
+ARGUMENTS:
+  source-folder    Source project folder to build and sign
+  output-prefix    Prefix for output files (zip, md5, sha1)
+
+OPTIONS:
+  --help, -h       Show this help message
+
+EXAMPLE:
+  $0 my-project dragon-dance-build
+
+DESCRIPTION:
+  This script creates a clean build package by:
+  1. Creating a clean copy (removes node_modules, .git, .github, dist)
+  2. Removing existing checksum and archive files
+  3. Generating MD5 and SHA1 checksums for all files
+  4. Creating a ZIP archive of the clean copy
+  5. Cleaning up temporary files
+
+OUTPUT FILES:
+  {prefix}.zip     Clean archive of the project
+  {prefix}.md5     MD5 checksums for all files
+  {prefix}.sha1    SHA1 checksums for all files
+EOF
+}
+
+# === Check for help flag ===
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+  show_help
+  exit 0
+fi
+
 # === Require 2 args ===
 if [ "$#" -ne 2 ]; then
   echo "Usage: $0 <source-folder> <output-prefix>"
   echo "Example: $0 my-project dragon-dance-build"
+  echo "Use --help for more information"
   exit 1
 fi
 
